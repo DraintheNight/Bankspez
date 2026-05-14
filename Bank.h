@@ -11,6 +11,6 @@ Bank(std::string name): name{name}{
 const map<unsigned, shared_ptr<Customer>>& get_customers() const;
 void create_customer(string name,string acc_name,int dispo, int balance,
 Account_Type = Account_Type::STANDARD, int fee = 0); 
-
+friend std::ostream& operator<<(std::ostream& o, const Bank& p);
 };
 #ENDIF

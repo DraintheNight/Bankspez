@@ -66,11 +66,9 @@ public:
     unsigned get_id();
     int get_balance();
     bool remove_owner(unsigned id);
-
+    friend std::ostream& operator<<(std::ostream& o, const Account& p)
 };
 
-
-std::ostream& operator<<(std::ostream& o, const Account& p);
 
 #endif
 class Standard_Account : public Account {

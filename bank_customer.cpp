@@ -3,9 +3,9 @@ unsigned Customer::next_id = 0;
 unsigned Customer::create_account(string acc_name, int dispo, int balance, Account_Type type, int fee) {
     std::shared_ptr<Account> new_acc;
     if(type==Account_Type::STANDARD)
-       new_acc = std::make_shared<Standard_Account>{acc_name, dispo, balance, shared_from_this()};
+       new_acc = std::make_shared<Standard_Account>(acc_name, dispo, balance, shared_from_this());
     else {
-         new_acc = std::make_shared<Special_Account>{acc_name, dispo, balance, shared_from_this(), fee};
+         new_acc = std::make_shared<Special_Account(acc_name, dispo, balance, shared_from_this(), fee);
     }
     unsigned this_id = new_acc->get_id();
     accounts[this_id] = new_acc;
@@ -18,13 +18,16 @@ int Customer::total_balance() const{
         });
         return sum;
 }
+unsigned Customer::get_id() const{
+    return this->id;
+}
 const string& Customer::get_name() const{
     return name;
 }
 const map<unsigned,shared_ptr<Account>>& Customer::get_accounts() const {
     return accounts;
 }
-bool Customer::share_account(unsigned aid,shared_ptr<Customer> new_owner {
+bool Customer::share_account(unsigned aid,shared_ptr<Customer> new_owner) {
     auto it = accounts.find(aid);
     if(it == accounts.end())
         return false;
