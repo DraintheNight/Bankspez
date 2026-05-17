@@ -1,6 +1,4 @@
-#ifndef ACCOUNT_H
-#define ACCOUNT_H
-
+#pragma once
 
 #include <string>
 #include <vector>
@@ -10,9 +8,12 @@
 #include <iostream>
 
 
+enum class Account_Type{ STANDARD, SPECIAL };
 class Customer;
 
-
+class Customer;
+class Bank_owner;
+class Bank;
 
 class Account : public std::enable_shared_from_this<Account> {
 private:
@@ -21,30 +22,12 @@ private:
     int dispo;
     static unsigned next_id;
     int balance; 
-    std::map<unsigned, std::weak_ptr<Customer> owners;
+    std::map<unsigned, std::weak_ptr<Customer>> owners;
 
 public:
   
-   Account(std::string name, int dispo, int balance, std::shared_ptr<Customer> owner) 
-    : name{name}, dispo{dispo}, balance{balance} {
+   Account(std::string name, int dispo, int balance, std::shared_ptr<Customer> owner);
     
-    if (name.empty()) {
-        throw std::runtime_error("Name darf nicht leer sein!");
-    }
-    if (dispo <= 0 || dispo >= 10000) {
-        throw std::runtime_error("Dispo muss > 0 und < 10000 sein!");
-    }
-    if (balance <= -dispo) {
-        throw std::runtime_error("Startbalance muss groesser als -dispo sein!");
-    }
-    if (!owner) {
-        throw std::runtime_error("Ein Konto braucht mindestens einen Besitzer!");
-    }
-
-    this->id = next_id++;
-
-    owners[owner->get_id()] = owner;
-}
 
     
     virtual ~Account() = default;
@@ -55,6 +38,7 @@ public:
     
     unsigned get_id() const;
     unsigned owner_count() const;
+    int get_dispo() const; 
     
     bool share_account(std::shared_ptr<Customer> new_owner);
     bool remove_owner(unsigned id);
@@ -65,12 +49,13 @@ public:
     friend std::ostream& operator<<(std::ostream& o, const Account& p);
     unsigned get_id();
     int get_balance();
-    bool remove_owner(unsigned id);
-    friend std::ostream& operator<<(std::ostream& o, const Account& p)
+    std::string get_name();
+
+
 };
 
 
-#endif
+
 class Standard_Account : public Account {
 public:
     
@@ -78,63 +63,26 @@ public:
 
     
     std::string additional_output() const override{
-        std::cout << "Standard"
+        return "Standard";
     };
 };
 class Special_Account : public Account {
     int fee;
 public:
-    Special_Account(string name, int dispo, int balance, shared_ptr<Customer> owner,int fee): name{name}, dispo{dispo}, balance{balance}, fee{fee} {
- if (name.empty()) {
-        throw std::runtime_error("Name darf nicht leer sein!");
-    }
-    if (dispo <= 0 || dispo >= 10000) {
-        throw std::runtime_error("Dispo muss > 0 und < 10000 sein!");
-    }
-    if (balance <= -dispo) {
-        throw std::runtime_error("Startbalance muss groesser als -dispo sein!");
-    }
-    if (!owner) {
-        throw std::runtime_error("Ein Konto braucht mindestens einen Besitzer!");
-    }
-    if (fee<= 0) {
-        throw std::runtime_error("fee muss größer 0 sein");
-    }
-    this->id = next_id++;
-
-    owners[owner->get_id()] = owner;
-}
-std::string additional_output() const override{
-        std::cout << "Special"
-    };
-int withdraw(int x);
-
-
-
-    };
-
-
-std::ostream& operator<<(std::ostream& o, const Account& p) {
-
-    o << "[" << p.name << ", " 
-      << p.additional_output() << ", " 
-      << p.balance << ", " 
-      << p.dispo << ", {";
-
-    bool first = true;
-    for (const auto& pair : p.owners) {
-   
-        if (auto s_ptr = pair.second.lock()) { 
-            if (!first) {
-                o << ", ";
-            }
-
-            o << "[" << s_ptr->get_name() << ", " << s_ptr->total_balance() << "]";
-            first = false;
+    Special_Account(std::string name, int dispo, int balance, std::shared_ptr<Customer> owner, int fee)
+        : Account(name, dispo, balance, owner), fee{fee} 
+    {
+       
+        if (fee <= 0) {
+            throw std::runtime_error("fee muss groesser 0 sein");
         }
     }
+std::string additional_output() const override{
+        return "Special";
+    };
+int withdraw(int x) override;
 
-    o << "}, " << p.owner_count() << "]";
 
-    return o;
-}
+
+    };
+
