@@ -23,10 +23,10 @@ o << "[" << p.name << ", {";
 bool first = true; 
         std::for_each(p.customers.begin(), p.customers.end(), [&](const auto& pair){
             if(!first){
-                o << ",";
+                o << ", ";}
                 o << *(pair.second);
         first = false;
-    }
+    
 });
 o << "}]";
 return o; 

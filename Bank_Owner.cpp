@@ -7,7 +7,10 @@
 #include <stdexcept>
 #include <iostream>
 bool Bank_Owner::transfer_bank(Bank_Owner& target){
+
             if (!this->bank)
+                return false;
+            if(target.bank)
                 return false;
     target.bank = std::move(this->bank);
     return true;
@@ -30,4 +33,14 @@ bool Bank_Owner::create_bank(std::string name){
     return true;
 }
 
+ std::ostream& operator<<(std::ostream& o, const Bank_Owner & bo){
+  o << "[";
+    if(!bo.bank){
+        o << bo.name << "]";
+    
+    return o;
+    }
+     o << bo.name << ", " << *bo.bank << "]";
+    return o;
 
+ };

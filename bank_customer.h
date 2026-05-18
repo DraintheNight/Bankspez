@@ -11,7 +11,7 @@ class Account;
 class Bank_Owner;
 class Bank;
 
-class Customer : std::enable_shared_from_this<Customer> {
+class Customer : public std::enable_shared_from_this<Customer> {
 unsigned id;
 std::string name;
 std::map<unsigned, std::shared_ptr<Account>> accounts;

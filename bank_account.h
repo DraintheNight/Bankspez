@@ -47,9 +47,9 @@ public:
     virtual std::string additional_output() const = 0;
 
     friend std::ostream& operator<<(std::ostream& o, const Account& p);
-    unsigned get_id();
-    int get_balance();
-    std::string get_name();
+    
+    int get_balance() const ;
+    std::string get_name() const ;
 
 
 };
@@ -78,7 +78,7 @@ public:
         }
     }
 std::string additional_output() const override{
-        return "Special";
+        return "Special, " + std::to_string(fee);
     };
 int withdraw(int x) override;
 
@@ -86,3 +86,4 @@ int withdraw(int x) override;
 
     };
 
+std::ostream& operator<<(std::ostream& o, const Account_Type& type);

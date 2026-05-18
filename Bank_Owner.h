@@ -28,4 +28,5 @@ bool transfer_bank(Bank_Owner& target);
 const std::map<unsigned, std::shared_ptr<Customer>>& get_customers() const;
 void create_customer(std::string name, std::string acc_name,int dispo, int balance,
 Account_Type type = Account_Type::STANDARD, int fee = 0);
+friend std::ostream& operator<<(std::ostream& o, const Bank_Owner & bo);
 };

@@ -54,6 +54,8 @@ void Customer::remove_account_from_map(unsigned id){
 
 }
 bool Customer::transfer(int amount, unsigned source_id, std::shared_ptr<Customer> target, unsigned target_id){
+    if(amount <= 0)
+        return false;
     if(source_id == target_id) {
         throw std::runtime_error("IDs sind identisch!");
     }
@@ -69,10 +71,14 @@ bool Customer::transfer(int amount, unsigned source_id, std::shared_ptr<Customer
     
     std::shared_ptr<Account> source_acc = it_source->second;
     std::shared_ptr<Account> target_acc = it_target->second;
-    
+    try {
     source_acc->withdraw(amount);
     target_acc->deposit(amount);
     return true;
+    }
+    catch (const std::runtime_error&){
+        return false;
+    }
 }
 
 std::ostream& operator<<(std::ostream& o, const Customer& p) {

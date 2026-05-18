@@ -21,10 +21,8 @@ int Account::deposit(int x){
     return balance;
 
 }
-unsigned Account::get_id() const{
-    return id;
 
-}
+
 unsigned Account::owner_count() const{
     unsigned cnt = 0;
     std::for_each(owners.begin(), owners.end(), [&cnt](const std::pair<unsigned, std::weak_ptr<Customer>>& entry) {
@@ -46,10 +44,10 @@ bool Account::share_account(std::shared_ptr<Customer> new_owner){
     return true;
 
 }
-int Account::get_balance(){
+int Account::get_balance() const {
     return balance;
 }
-unsigned Account::get_id(){
+unsigned Account::get_id() const{
     return id;
 }
 bool Account::remove_owner(unsigned id) {
@@ -128,6 +126,14 @@ std::ostream& operator<<(std::ostream& o, const Account& p) {
 
     return o;
 }
-std::string Account::get_name(){
+std::string Account::get_name() const{
     return name;
+}
+std::ostream& operator<<(std::ostream& o, const Account_Type& type){
+    if(type == Account_Type::STANDARD){
+        o << "Standard";
+        return o;
+    }
+    o <<  "Special";
+    return o;
 }
